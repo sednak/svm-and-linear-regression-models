@@ -1,0 +1,24 @@
+import pandas as pd
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report,accuracy_score,confusion_matrix
+data = load_breast_cancer()
+x = data.data
+y = data.target
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=42)
+print(f"Number of training samples:{x_train.shape[0]}")
+print(f"Number of testing samples:{x_test.shape[0]}")
+scaler=StandardScaler()
+x_train_scaled=scaler.fit_transform(x_train)
+x_test_scaled=scaler.transform(x_test)
+model=SVC(kernel='linear')
+model.fit(x_train,y_train)
+svm_model=SVC(kernel='linear',C=1.0)
+svm_model.fit(x_train_scaled, y_train)
+y_pred = svm_model.predict(x_test_scaled)
+print("Accuracy:",accuracy_score(y_test,y_pred))
+print("\nClassification report:\n",classification_report(y_test,y_pred))
+cm = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:\n", cm)
